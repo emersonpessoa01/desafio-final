@@ -1,22 +1,13 @@
 {
-  "name": "aula2.2.4",
+  "name": "mongodb-import",
   "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
+  "main": "index.js",
+  "license": "MIT",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --experimental-modules app.js",
-    "dev": "node -r dotenv/config -- app.js"
+    "db": "node populateMongoDb.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "mongoose": "^5.10.14",
-    "mongoose-date-format": "^1.2.0",
-    "nodemon": "^2.0.6"
-  },
-  "type": "module"
+    "dotenv": "8.2.0",
+    "mongoose": "5.9.19"
+  }
 }
