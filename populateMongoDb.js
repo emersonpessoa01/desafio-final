@@ -1,43 +1,44 @@
-const mongoose = require('mongoose');
-const fs = require('fs').promises;
-
-const dotenv = require('dotenv');
+import mongoose from "mongoose"
+import { promises} from "fs"
+import dotenv from "dotenv"
 dotenv.config();
 
+const { readFile} = promises
 const TRANSACTIONS_COLLECTION = 'transactions';
 
 /**
- * Crie um arquivo .env na raiz da pasta 'utils' e
+ * Criando um arquivo .env na raiz da pasta 'utils' e
  * preencha os valores conforme o arquivo de
  * exemplo "".env.example"
  *
  * DB_CONNECTION
  */
-const { DB_CONNECTION } = process.env;
 
 console.log('Iniciando conexão ao MongoDB...');
-mongoose.connect(
-  DB_CONNECTION,
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  },
-  (err) => {
-    if (err) {
-      console.error(`Erro na conexão ao MongoDB - ${err}`);
-      process.exit(1);
-    }
+(async () => {
+  const { DB_CONNECTION } = process.env;
+  try {
+    await mongoose.connect(
+      DB_CONNECTION,
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      }
+    );
+    console.log("Conectado ao MongoDb Atlas");
+  } catch (err) {
+    console.log("Erro ao conectar no MongoDB");
   }
-);
+})();
 
 const { connection } = mongoose;
 
 connection.once('open', () => {
-  console.log('Conectado ao MongoDB');
+  // console.log('Conectado ao MongoDB');
   recreateCollections();
 });
 
-async function recreateCollections() {
+const recreateCollections=async()=> {
   console.log('Eliminando as collections...');
   await dropCollections();
 
@@ -51,7 +52,7 @@ async function recreateCollections() {
   console.log('Processamento finalizado!');
 }
 
-async function dropCollections() {
+async function dropCollections(){
   const promiseTransactions = new Promise((resolve, reject) => {
     connection.db
       .dropCollection(TRANSACTIONS_COLLECTION)
@@ -88,7 +89,7 @@ async function createCollections() {
 
 async function populateCollections() {
   const promiseTransactions = new Promise(async (resolve, reject) => {
-    const stringArrayTransactions = await fs.readFile(
+    const stringArrayTransactions = await readFile(
       './official-db/transactionsArray.json',
       'utf-8'
     );
